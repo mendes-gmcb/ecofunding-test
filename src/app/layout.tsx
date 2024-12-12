@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Lexend_Tera } from "next/font/google"
 import "./globals.css";
+import NextAuthSessionProvider from "@/providers/sessionProvider"
 
 const lexendTera = Lexend_Tera({
   subsets: ["latin-ext"],
@@ -21,7 +22,7 @@ export default function RootLayout({
       <body
         className={`${lexendTera.className} antialiased`}
       >
-        {children}
+        <NextAuthSessionProvider>{children}</NextAuthSessionProvider>
       </body>
     </html>
   );
