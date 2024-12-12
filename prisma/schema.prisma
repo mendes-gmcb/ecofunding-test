@@ -12,3 +12,64 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id            String   @id @default(uuid())
+  email         String   @unique
+  name          String
+  emailVerified DateTime
+  image         String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  UserRole UserRole[]
+}
+
+// Tabela de Verificação de Token (para verificação de e-mail, redefinição de senha)
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Role {
+  id          Int    @id @default(autoincrement())
+  name        String
+  description String
+
+  RolePermission RolePermission[]
+  UserRole       UserRole[]
+}
+
+model Permission {
+  id          Int    @id @default(autoincrement())
+  name        String @unique
+  description String
+
+  RolePermission RolePermission[]
+}
+
+// Tabela de Mapeamento de Permissões para Funções
+model RolePermission {
+  role_id       Int
+  permission_id Int
+
+  role       Role       @relation(fields: [role_id], references: [id], onDelete: Cascade)
+  permission Permission @relation(fields: [permission_id], references: [id], onDelete: Cascade)
+
+  @@id([role_id, permission_id])
+}
+
+// Tabela de Usuários e Funções
+model UserRole {
+  user_id String
+  role_id Int
+
+  user User @relation(fields: [user_id], references: [id])
+  role Role @relation(fields: [role_id], references: [id], onDelete: Cascade)
+
+  @@id([user_id, role_id])
+}
