@@ -5,23 +5,6 @@ import Image from "next/image";
 import { useRouter } from "next/navigation"
 import { SyntheticEvent } from "react"
 
-// interface userSessionInterface {
-//   email: string,
-//   id: string,
-//   image: string,
-//   name: string,
-//   createdAt: DateTime,
-//   updatedAt: DateTime,
-//   UserRole: RoleInterface[]
-// }
-
-// interface RoleInterface {
-//   role: {
-//     id: number,
-//     name: string,
-//   }
-// }
-
 export default function SignInPage() {
   const router = useRouter();
 
@@ -41,10 +24,10 @@ export default function SignInPage() {
       return
     }
 
-    const user = await getSession();
-    if (user && user.UserRole[0].role.name == "INVESTOR") {
+    const session = await getSession();
+    if (session?.user.UserRole[0].role.name == "INVESTOR") {
       router.replace('/admin/investor/dashboard');
-    } else if (user.UserRole[0].role.name == "DESIGNER") {
+    } else if (session?.user.UserRole[0].role.name == "DESIGNER") {
       router.replace('/admin/desiner/dashboard');
     }
   }

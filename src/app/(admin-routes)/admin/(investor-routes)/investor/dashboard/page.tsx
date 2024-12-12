@@ -8,7 +8,7 @@ export default async function DashboardPage() {
 
   return (
     <>
-      <h1>bem vindo investidor {session?.name} !</h1>
+      <h1>bem vindo investidor {session?.user.name} !</h1>
       <ButtonLogout />
     </>
   )

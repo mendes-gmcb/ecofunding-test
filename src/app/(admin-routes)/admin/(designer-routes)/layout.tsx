@@ -10,7 +10,7 @@ interface PrivateLayoutProps {
 export default async function PrivateLayout({ children }: PrivateLayoutProps) {
   const session = await getServerSession(nextAuthOptions)
 
-  if (session?.UserRole[0].role.name != "DESIGNER") {
+  if (session?.user.UserRole[0].role.name != "DESIGNER") {
     redirect('/admin/investor/dashboard');
   }
 
