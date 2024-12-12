@@ -24,7 +24,10 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  UserRole UserRole[]
+  UserRole          UserRole[]
+  Project           Project[]
+  ProjectInvestment ProjectInvestment[]
+  ProjectReport     ProjectReport[]
 }
 
 // Tabela de Verificação de Token (para verificação de e-mail, redefinição de senha)
@@ -73,4 +76,111 @@ model UserRole {
   role Role @relation(fields: [role_id], references: [id], onDelete: Cascade)
 
   @@id([user_id, role_id])
+}
+
+model Project {
+  id          Int             @id @default(autoincrement())
+  name        String
+  description String          @db.Text
+  category    ProjectCategory
+  state       String //  Estado
+
+  // Detalhes de Impacto
+  environmental_impact String? @db.Text
+  social_impact        String? @db.Text
+  carbon_reduction     Decimal @db.Decimal(10, 2) // Toneladas de CO2
+
+  // Detalhes Financeiros
+  modality             InvestmentModality
+  target_irr           Decimal            @db.Decimal(10, 2) // Taxa Interna de Retorno
+  total_capture_volume Decimal            @db.Decimal(15, 2) // Valor a captar
+
+  // Detalhes de Pagamento
+  payment_projected_period Int //  Em meses
+  payment_period_unit      String // "meses", "anos"
+  return_period            Int // Período de retorno
+
+  // Documentos e Status
+  status             String  @default("DRAFT")
+  documents_verified Boolean @default(false)
+
+  designer_id String // Criador do projeto
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  Designer User @relation(fields: [designer_id], references: [id])
+
+  ProjectDocuments  ProjectDocument[]
+  ProjectInvestment ProjectInvestment[]
+  ProjectReport     ProjectReport[]
+}
+
+enum ProjectCategory {
+  RENEW_ENERGY
+  ENVIRONMENTAL_CONSERVATION
+  SUSTAINABLE_AGRICULTURE
+  WASTE_MANAGEMENT
+  REFORESTATION
+  URBAN_MOBILITY
+  BASIC_SANITATION
+  ENVIRONMENTAL_EDUCATION
+  OTHERS
+}
+
+enum InvestmentModality {
+  DEBT
+  EQUITY
+  HYBRID
+  ROYALTIES
+  CARBON_CREDIT
+}
+
+model ProjectDocument {
+  id            Int      @id @default(autoincrement())
+  project_id    Int
+  document_type String
+  file_path     String
+  uploaded_at   DateTime @default(now())
+
+  Project Project @relation(fields: [project_id], references: [id])
+}
+
+model ProjectInvestment {
+  id                Int                     @id @default(autoincrement())
+  project_id        Int
+  investor_id       String
+  investment_amount Decimal                 @db.Money
+  investment_date   DateTime
+  status            ProjectInvestmentStatus
+
+  Project  Project @relation(fields: [project_id], references: [id])
+  Investor User    @relation(fields: [investor_id], references: [id])
+}
+
+enum ProjectInvestmentStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model ProjectReport {
+  id          Int      @id @default(autoincrement())
+  project_id  Int
+  designer_id String
+  report_date DateTime
+
+  // Indicadores de Progresso
+  current_stage          String
+  milestones_achieved    String  @db.Text
+  financial_progress     Decimal @db.Decimal(5, 2)
+  environmental_progress Decimal @db.Decimal(5, 2)
+
+  // Documentação
+  report_file_path String
+
+  createdAt DateTime @default(now())
+
+  Project  Project @relation(fields: [project_id], references: [id])
+  Designer User    @relation(fields: [designer_id], references: [id])
 }
