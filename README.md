@@ -74,6 +74,9 @@ npm run dev
 - Armazenamento no S3: Relatórios são enviados de forma segura e armazenados na nuvem.
 
 ## Features a Implementar
+### Sistema completo de autenticação
+- Descrição: validar o email e telefone do usuário, implementar sistema de autenticação com 2 fatores, enviar link para redefinição de senha.
+
 ### Notificações em Tempo Real
 - Descrição: Notificar os usuários sobre mensagens e atualizações de relatórios.
 - Implementação: Usar WebSockets ou Firebase Cloud Messaging para atualizações em tempo real.
