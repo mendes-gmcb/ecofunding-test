@@ -25,10 +25,10 @@ export default function SignInPage() {
     }
 
     const session = await getSession();
-    if (session?.user.UserRole[0].role.name == "INVESTOR") {
+    if (session?.UserRole[0].role.name == "INVESTOR") {
       router.replace('/admin/investor/dashboard');
-    } else if (session?.user.UserRole[0].role.name == "DESIGNER") {
-      router.replace('/admin/desiner/dashboard');
+    } else if (session?.UserRole[0].role.name == "DESIGNER") {
+      router.replace('/admin/designer/dashboard');
     }
   }
 
@@ -52,6 +52,9 @@ export default function SignInPage() {
             onSubmit={handleSubmit}
             className="space-y-4"
           >
+
+            <div>
+            <label htmlFor="email">Email</label>
             <input
               type="email"
               name="email"
@@ -61,16 +64,21 @@ export default function SignInPage() {
                 rounded-lg focus:outline-none focus:ring-2 text-white-300
                 focus:border-blue-500"
             />
-            <input 
-              type="password" 
-              name="password" 
-              id="password" 
-              required 
-              placeholder="Digite sua senha" 
-              className="w-full px-4 py-2 border border-white-50 bg-background
-                rounded-lg focus:outline-none focus:ring-2 text-white-300
-                focus:border-blue-500"
-            />
+            </div>
+
+            <div>
+              <label htmlFor="password">Senha</label>
+              <input 
+                type="password" 
+                name="password" 
+                id="password" 
+                required 
+                placeholder="Digite sua senha" 
+                className="w-full px-4 py-2 border border-white-50 bg-background
+                  rounded-lg focus:outline-none focus:ring-2 text-white-300
+                  focus:border-blue-500"
+              />
+          </div>
             <button
               type="submit"
               className="w-full bg-green-600 text-white 
